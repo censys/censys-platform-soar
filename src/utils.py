@@ -1,3 +1,5 @@
+import ipaddress
+
 from censys_platform import SDK
 
 from soar_sdk.logging import getLogger
@@ -24,3 +26,11 @@ def create_censys_sdk(asset: Asset) -> SDK:
         personal_access_token=asset.api_token,
         server_url=asset.base_url,
     )
+
+
+def is_valid_ip(value: str) -> bool:
+    try:
+        ipaddress.ip_address(value)
+    except ValueError:
+        return False
+    return True
