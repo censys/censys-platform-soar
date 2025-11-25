@@ -5,7 +5,7 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.app import App
 from soar_sdk.logging import getLogger
 
-from actions import get_cert, get_host, get_web_property
+from actions.registration import register_all_actions
 from config import Asset
 from utils import create_censys_sdk, has_org_config
 
@@ -47,24 +47,7 @@ def test_connectivity(soar: SOARClient, asset: Asset) -> None:
             raise ActionFailure("Connectivity test failed with generic error") from err
 
 
-app.register_action(
-    get_cert,
-    name="Lookup Certificate",
-    verbose="Retrieve a certificate by SHA256 fingerprint from the Censys Platform API",
-    action_type="investigate",
-)
-app.register_action(
-    get_host,
-    name="Lookup Host",
-    verbose="Retrieve a host by IP address from the Censys Platform API",
-    action_type="investigate",
-)
-app.register_action(
-    get_web_property,
-    name="Lookup Web Property",
-    verbose="Retrieve a web property by domain_name:port from the Censys Platform API",
-    action_type="investigate",
-)
+register_all_actions(app)
 
 if __name__ == "__main__":
     app.cli()
