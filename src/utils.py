@@ -1,3 +1,4 @@
+from datetime import datetime
 import ipaddress
 
 from censys_platform import SDK
@@ -47,3 +48,14 @@ def is_valid_web_property_hostname(value: str) -> bool:
     parts = value.split(".")
 
     return len(parts) > 1 and all(len(p) > 0 for p in parts)
+
+
+def is_valid_at_time(value: str) -> bool:
+    """
+    Validates that the given input is a valid ISO 8601 timestamp.
+    """
+    try:
+        datetime.fromisoformat(value)
+        return True
+    except ValueError:
+        return False
