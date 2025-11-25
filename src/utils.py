@@ -34,3 +34,16 @@ def is_valid_ip(value: str) -> bool:
     except ValueError:
         return False
     return True
+
+
+def is_valid_web_property_hostname(value: str) -> bool:
+    """
+    Very naive validation of a bare domain name. Either accepts a valid IP address, or a
+    dot-separated set of non-empty parts.
+    """
+    if is_valid_ip(value):
+        return True
+
+    parts = value.split(".")
+
+    return len(parts) > 1 and all(len(p) > 0 for p in parts)
