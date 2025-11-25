@@ -1,21 +1,14 @@
+from censys_platform import models
+
 from soar_sdk.abstract import SOARClient
+from soar_sdk.exceptions import ActionFailure
 from soar_sdk.app import App
-from soar_sdk.asset import AssetField, BaseAsset
 from soar_sdk.logging import getLogger
 
+from config import Asset
+from utils import create_censys_sdk, has_org_config
+
 logger = getLogger()
-
-
-class Asset(BaseAsset):
-    base_url: str = AssetField(default="https://api.platform.censys.io")
-    api_token: str = AssetField(
-        sensitive=True, description="Personal access token for authentication"
-    )
-    organization_id = AssetField(
-        default=None,
-        description="Organization ID for the organization you would like to act as",
-    )
-
 
 app = App(
     name="censys-platform-soar",
@@ -33,7 +26,24 @@ app = App(
 
 @app.test_connectivity()
 def test_connectivity(soar: SOARClient, asset: Asset) -> None:
-    raise NotImplementedError()
+    with create_censys_sdk(asset) as sdk:
+        try:
+            if has_org_config(asset):
+                sdk.account_management.get_organization_details(
+                    organization_id=str(asset.organization_id),
+                    include_member_counts=False,
+                )
+            else:
+                sdk.global_data.get_host(host_id="127.0.0.1")
+            return
+        except models.SDKBaseError as err:
+            logger.error(err)
+            raise ActionFailure(
+                f"Connectivity test failed with status code {err.status_code}"
+            ) from err
+        except Exception as err:
+            logger.error(err)
+            raise ActionFailure("Connectivity test failed with generic error") from err
 
 
 if __name__ == "__main__":
