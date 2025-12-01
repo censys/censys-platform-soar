@@ -91,7 +91,7 @@ def get_web_property(
         )
     )
     soar.set_message(
-        f"Web Property '{data.hostname}:{data.port}' has {len(data.endpoints)} visible endpoint(s)"
+        f"Web Property '{data.hostname}:{data.port}' has {len(data.endpoints):,} visible endpoint(s)"
     )
 
     return GetWebPropertyActionOutput(web=data)
