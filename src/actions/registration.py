@@ -3,6 +3,7 @@ from soar_sdk.app import App
 from .get_cert import get_cert
 from .get_host import get_host
 from .get_web_property import get_web_property
+from .search import search
 
 
 def register_all_actions(app: App) -> None:
@@ -22,5 +23,11 @@ def register_all_actions(app: App) -> None:
         get_web_property,
         name="Lookup Web Property",
         verbose="Retrieve a web property by domain_name:port from the Censys Platform API",
+        action_type="investigate",
+    )
+    app.register_action(
+        search,
+        name="Perform a Search",
+        verbose="Searches across all Censys assets using the provided CenQL query",
         action_type="investigate",
     )
