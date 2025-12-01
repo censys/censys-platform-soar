@@ -41,6 +41,17 @@ To run a particular action via the CLI, invoke the add-on via Python directly:
 python src/app.py action get_host -p test_param_host_.json -a test_asset.json
 ```
 
+### Actions
+
+These are the available base commands. To run one successfully, you will still need an appropriate asset file (specified with `-a`) and param file (specified with `-p`) as mentioned above.
+
+| Command | Description |
+|----|----|
+| `python src/app.py action get_host` | Retrieves a host by IP lookup |
+| `python src/app.py action get_cert` | Retrieves a certificate by SHA256 lookup |
+| `python src/app.py action get_web_property` | Retrieves a web property by `hostname:port` lookup |
+| `python src/app.py action test_connectivity` | Tests whether the asset file is sufficient to connect to the API |
+
 ### Helpful Resources
 
 - [Censys Platform API Docs](https://docs.censys.com/reference/get-started)

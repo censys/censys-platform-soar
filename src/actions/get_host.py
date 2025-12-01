@@ -61,7 +61,7 @@ def get_host(
         try:
             res = sdk.global_data.get_host(
                 host_id=params.ip,
-                at_time=str(params.at_time) if params.at_time is not None else None,
+                at_time=str(params.at_time) if params.at_time else None,
             )
             data = res.result.result.resource
             logger.debug("Successfully retrieved host")

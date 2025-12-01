@@ -1,5 +1,5 @@
 from datetime import datetime
-import ipaddress
+from ipaddress import ip_address
 
 from censys_platform import SDK
 
@@ -31,7 +31,7 @@ def create_censys_sdk(asset: Asset) -> SDK:
 
 def is_valid_ip(value: str) -> bool:
     try:
-        ipaddress.ip_address(value)
+        ip_address(value)
     except ValueError:
         return False
     return True
