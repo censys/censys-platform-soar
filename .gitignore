@@ -176,4 +176,6 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/python
 
 test_asset.json
+test_params.json
+test_params_*.json
 *.tgz

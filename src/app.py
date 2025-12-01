@@ -5,6 +5,7 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.app import App
 from soar_sdk.logging import getLogger
 
+from actions.registration import register_all_actions
 from config import Asset
 from utils import create_censys_sdk, has_org_config
 
@@ -45,6 +46,8 @@ def test_connectivity(soar: SOARClient, asset: Asset) -> None:
             logger.error(err)
             raise ActionFailure("Connectivity test failed with generic error") from err
 
+
+register_all_actions(app)
 
 if __name__ == "__main__":
     app.cli()
