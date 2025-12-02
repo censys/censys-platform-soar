@@ -33,7 +33,7 @@ class GetHostActionSummary(ActionOutput):
     service_count: int
 
 
-def get_host(
+def lookup_host(
     params: GetHostActionParams, asset: Asset, soar: SOARClient[GetHostActionSummary]
 ) -> GetHostActionOutput:
     """

@@ -36,7 +36,7 @@ class GetWebPropertyActionSummary(ActionOutput):
     endpoint_count: int
 
 
-def get_web_property(
+def lookup_web_property(
     params: GetWebPropertyActionParams,
     asset: Asset,
     soar: SOARClient[GetWebPropertyActionSummary],

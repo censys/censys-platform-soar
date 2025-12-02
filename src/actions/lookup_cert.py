@@ -34,7 +34,7 @@ class GetCertActionSummary(ActionOutput):
     fingerprint_sha256: str
 
 
-def get_cert(
+def lookup_cert(
     params: GetCertActionParams, asset: Asset, soar: SOARClient[GetCertActionSummary]
 ) -> GetCertActionOutput:
     """
