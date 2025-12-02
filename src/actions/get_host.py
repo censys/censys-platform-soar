@@ -85,7 +85,7 @@ def get_host(
         )
     )
     soar.set_message(
-        f"Host '{data.ip}' has {data.service_count} visible service(s), last scanned at {latest_scan}"
+        f"Host '{data.ip}' has {data.service_count:,} visible service(s), last scanned at {latest_scan}"
     )
 
     return GetHostActionOutput(scan_time=latest_scan, host=data)
