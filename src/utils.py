@@ -5,7 +5,7 @@ from censys_platform import SDK
 
 from soar_sdk.logging import getLogger
 
-from config import Asset
+from .config import Asset
 
 logger = getLogger()
 
@@ -23,7 +23,7 @@ def create_censys_sdk(asset: Asset) -> SDK:
     )
 
     return SDK(
-        organization_id=str(asset.organization_id),
+        organization_id=asset.organization_id,
         personal_access_token=asset.api_token,
         server_url=asset.base_url,
     )

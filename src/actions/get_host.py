@@ -5,22 +5,23 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
-from config import Asset
-from utils import create_censys_sdk, is_valid_at_time, is_valid_ip
+from ..config import Asset
+from ..utils import create_censys_sdk, is_valid_at_time, is_valid_ip
+from .action_output import CensysActionOutput
 
 logger = getLogger()
 
 
 class GetHostActionParams(Params):
     ip: str = Param(description="IPv4/IPv6 address for the host to lookup")
-    at_time: str | None = Param(
+    at_time: str = Param(
         default=None,
         required=False,
         description="The historical timestamp to retrieve host data for. If unspecified, we will retrieve the latest data.",
     )
 
 
-class GetHostActionOutput(ActionOutput):
+class GetHostActionOutput(CensysActionOutput):
     host: models.Host
     scan_time: str
 

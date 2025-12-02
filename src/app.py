@@ -5,9 +5,9 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.app import App
 from soar_sdk.logging import getLogger
 
-from actions.registration import register_all_actions
-from config import Asset
-from utils import create_censys_sdk, has_org_config
+from .actions.registration import register_all_actions
+from .config import Asset
+from .utils import create_censys_sdk, has_org_config
 
 logger = getLogger()
 
@@ -31,7 +31,7 @@ def test_connectivity(soar: SOARClient, asset: Asset) -> None:
         try:
             if has_org_config(asset):
                 sdk.account_management.get_organization_details(
-                    organization_id=str(asset.organization_id),
+                    organization_id=asset.organization_id,
                     include_member_counts=False,
                 )
             else:

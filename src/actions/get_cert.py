@@ -8,8 +8,9 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.logging import getLogger
 from soar_sdk.params import Params
 
-from config import Asset
-from utils import create_censys_sdk
+from ..config import Asset
+from ..utils import create_censys_sdk
+from .action_output import CensysActionOutput
 
 logger = getLogger()
 
@@ -23,7 +24,7 @@ class GetCertActionParams(Params):
     )
 
 
-class GetCertActionOutput(ActionOutput):
+class GetCertActionOutput(CensysActionOutput):
     display_name: str
     cert: models.Certificate
 
