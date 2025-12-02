@@ -38,7 +38,7 @@ Parameters to the actions are passed via a JSON params file. You can create a `t
 To run a particular action via the CLI, invoke the add-on via Python directly:
 
 ```bash
-python src/app.py action get_host -p test_param_host_.json -a test_asset.json
+python -m src.app action get_host -p test_param_host_.json -a test_asset.json
 ```
 
 ### Actions
@@ -47,11 +47,11 @@ These are the available base commands. To run one successfully, you will still n
 
 | Command | Description |
 |----|----|
-| `python src/app.py action get_host` | Retrieves a host by IP lookup |
-| `python src/app.py action get_cert` | Retrieves a certificate by SHA256 lookup |
-| `python src/app.py action get_web_property` | Retrieves a web property by `hostname:port` lookup |
-| `python src/app.py action search` | Performs a search across all Censys assets using the given query |
-| `python src/app.py action test_connectivity` | Tests whether the asset file is sufficient to connect to the API |
+| `python -m src.app action get_host` | Retrieves a host by IP lookup |
+| `python -m src.app action get_cert` | Retrieves a certificate by SHA256 lookup |
+| `python -m src.app action get_web_property` | Retrieves a web property by `hostname:port` lookup |
+| `python -m src.app action search` | Performs a search across all Censys assets using the given query |
+| `python -m src.app action test_connectivity` | Tests whether the asset file is sufficient to connect to the API |
 
 To add a new action, create a new file in `actions` with the same name as the search. Once it is ready to be tested, update `actions/registration.py` to register the new action, providing useful short/long descriptions. Lastly, update the above table to include the new action.
 
