@@ -1,3 +1,6 @@
+from datetime import datetime
+from ipaddress import ip_address
+
 from censys_platform import SDK
 
 from soar_sdk.logging import getLogger
@@ -24,3 +27,35 @@ def create_censys_sdk(asset: Asset) -> SDK:
         personal_access_token=asset.api_token,
         server_url=asset.base_url,
     )
+
+
+def is_valid_ip(value: str) -> bool:
+    try:
+        ip_address(value)
+    except ValueError:
+        return False
+    return True
+
+
+def is_valid_web_property_hostname(value: str) -> bool:
+    """
+    Very naive validation of a bare domain name. Either accepts a valid IP address, or a
+    dot-separated set of non-empty parts.
+    """
+    if is_valid_ip(value):
+        return True
+
+    parts = value.split(".")
+
+    return len(parts) > 1 and all(len(p) > 0 for p in parts)
+
+
+def is_valid_at_time(value: str) -> bool:
+    """
+    Validates that the given input is a valid ISO 8601 timestamp.
+    """
+    try:
+        datetime.fromisoformat(value)
+        return True
+    except ValueError:
+        return False

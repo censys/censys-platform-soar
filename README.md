@@ -23,19 +23,37 @@ It is recommended that, when developing, you use the Python environment managed 
 
 Add-on settings are managed through the SDK's [Asset Configuration](https://phantomcyber.github.io/splunk-soar-sdk/getting_started/defining_asset.html) definitions. The configuration exposed by the add-on includes:
 
-- `base_url`: This is used to define the base URL (protocol and domain) through which the Censys Platform API should be accessed
 - `api_token`: This is how you'll specify your PAT (personal access token) for authentication purposes
 - `organization_id`: This is your organization ID within the Censys Platform which is used alongside your PAT to authenticate a request
+- `base_url` (optional): This is used to define the base URL (protocol and domain) through which the Censys Platform API should be accessed
+
+To specify these config values, create a `test_asset.json` file in the base directory of this repository, then populate the fields as appropriate.
 
 ### Testing Locally
 
 Testing is facilitated by using the `splunk-soar-sdk` tool, installed above. We recommend following the [SDK instructions](https://phantomcyber.github.io/splunk-soar-sdk/getting_started/testing_and_building.html#running-from-the-command-line) for running actions via the CLI as the primary development workflow, using a SOAR Cloud/on-prem instance just as a final verification step.
 
+Parameters to the actions are passed via a JSON params file. You can create a `test_params.json` file in the base directory of this repository and it will be excluded from source control. You can create multiple param files (such as for each action) by following the pattern `test_params_{name}.json`.
+
 To run a particular action via the CLI, invoke the add-on via Python directly:
 
 ```bash
-python src/app.py action my-action -p test_params.json -a test_asset.json
+python src/app.py action get_host -p test_param_host_.json -a test_asset.json
 ```
+
+### Actions
+
+These are the available base commands. To run one successfully, you will still need an appropriate asset file (specified with `-a`) and param file (specified with `-p`) as mentioned above.
+
+| Command | Description |
+|----|----|
+| `python src/app.py action get_host` | Retrieves a host by IP lookup |
+| `python src/app.py action get_cert` | Retrieves a certificate by SHA256 lookup |
+| `python src/app.py action get_web_property` | Retrieves a web property by `hostname:port` lookup |
+| `python src/app.py action search` | Performs a search across all Censys assets using the given query |
+| `python src/app.py action test_connectivity` | Tests whether the asset file is sufficient to connect to the API |
+
+To add a new action, create a new file in `actions` with the same name as the search. Once it is ready to be tested, update `actions/registration.py` to register the new action, providing useful short/long descriptions. Lastly, update the above table to include the new action.
 
 ### Helpful Resources
 
