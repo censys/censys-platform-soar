@@ -52,13 +52,13 @@ def _model_to_json_schema_impl(
     into a SOAR SDK field specifier.
     """
     for _field_name, field in model_cls.model_fields.items():
-        field_name = alias if (alias := field.alias) else _field_name
+        field_name = field.alias or _field_name
 
         field_type = field.annotation
         if field_type is None:
             continue
 
-        datapath = parent_datapath + f".{field_name}"
+        datapath = f"{parent_datapath}.{field_name}"
 
         yield from _field_to_json_schema_impl(
             cls,
@@ -74,7 +74,7 @@ def _field_to_json_schema_impl(
     cls,
     field_name: str,
     field_type: Any,
-    field_info,
+    field_info: Any,
     datapath: str,
     column_order_counter: itertools.count,
 ) -> Iterator[OutputFieldSpecification]:
