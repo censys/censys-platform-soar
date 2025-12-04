@@ -87,7 +87,7 @@ def get_cert_display_name(cert: models.Certificate) -> str | None:
     except AttributeError:
         common_names = None
 
-    if common_names is not None and len(common_names) > 0:
+    if common_names and len(common_names) > 0 and common_names[0]:
         return common_names[0]
 
     try:
