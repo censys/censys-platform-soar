@@ -6,8 +6,10 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
-from config import Asset
-from utils import create_censys_sdk, is_valid_at_time, is_valid_web_property_hostname
+from ..config import Asset
+from ..utils import create_censys_sdk, is_valid_at_time, is_valid_web_property_hostname
+from .action_output import CensysActionOutput
+
 
 logger = getLogger()
 
@@ -15,14 +17,14 @@ logger = getLogger()
 class GetWebPropertyActionParams(Params):
     hostname: str
     port: int = Field(gte=1, lte=65535)
-    at_time: str | None = Param(
+    at_time: str = Param(
         default=None,
         required=False,
         description="The historical timestamp to retrieve web property data for. If unspecified, we will retrieve the latest data.",
     )
 
 
-class GetWebPropertyActionOutput(ActionOutput):
+class GetWebPropertyActionOutput(CensysActionOutput):
     web: models.Webproperty
 
 
@@ -34,7 +36,7 @@ class GetWebPropertyActionSummary(ActionOutput):
     endpoint_count: int
 
 
-def get_web_property(
+def lookup_web_property(
     params: GetWebPropertyActionParams,
     asset: Asset,
     soar: SOARClient[GetWebPropertyActionSummary],

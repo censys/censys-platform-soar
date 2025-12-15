@@ -6,8 +6,9 @@ from soar_sdk.exceptions import ActionFailure
 from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
-from config import Asset
-from utils import create_censys_sdk
+from ..config import Asset
+from ..utils import create_censys_sdk
+from .action_output import CensysActionOutput
 
 logger = getLogger()
 
@@ -24,7 +25,7 @@ class SearchActionParams(Params):
     )
 
 
-class SearchActionOutput(ActionOutput):
+class SearchActionOutput(CensysActionOutput):
     hits: list[models.SearchQueryHit]
     query_duration_millis: int
     total_hits: float
