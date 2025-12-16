@@ -1,5 +1,6 @@
 from datetime import datetime
 from ipaddress import ip_address
+from typing import TypeVar
 
 from censys_platform import SDK
 
@@ -59,3 +60,19 @@ def is_valid_at_time(value: str) -> bool:
         return True
     except ValueError:
         return False
+
+
+T = TypeVar("T")
+
+
+def get_attr_path(obj: object, path: str, default: T = None) -> T:
+    parts = path.split(".")
+    curr = obj
+
+    for attr in parts:
+        if not hasattr(curr, attr):
+            break
+
+        curr = getattr(curr, attr, default)
+
+    return curr
