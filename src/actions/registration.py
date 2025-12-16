@@ -1,6 +1,6 @@
 from soar_sdk.app import App
 
-from .lookup_cert import lookup_cert
+from .lookup_cert import lookup_cert, lookup_cert_view_handler
 from .lookup_host import lookup_host, lookup_host_view_handler
 from .lookup_web_property import lookup_web_property
 from .search import search
@@ -9,7 +9,8 @@ from .search import search
 def register_all_actions(app: App) -> None:
     app.register_action(
         lookup_cert,
-        render_as="json",
+        view_handler=lookup_cert_view_handler,
+        view_template="lookup_cert.html",
         verbose="Retrieve a certificate by SHA256 fingerprint from the Censys Platform API",
     )
     app.register_action(
