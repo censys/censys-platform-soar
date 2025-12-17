@@ -72,6 +72,54 @@
                 <td>{{ result.asn }}</td>
               </tr>
             {% endif %}
+            {% if result.location.city %}
+              <tr class="field-row">
+                <td>City</td>
+                <td>{{ result.location.city }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.province %}
+              <tr class="field-row">
+                <td>Province</td>
+                <td>{{ result.location.province }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.postal_code %}
+              <tr class="field-row">
+                <td>Postal Code</td>
+                <td>{{ result.location.postal_code }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.country %}
+              <tr class="field-row">
+                <td>Country</td>
+                <td>{{ result.location.country }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.country_code %}
+              <tr class="field-row">
+                <td>Country Code</td>
+                <td>{{ result.location.country_code }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.continent %}
+              <tr class="field-row">
+                <td>Continent</td>
+                <td>{{ result.location.continent }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.latitude is not none %}
+              <tr class="field-row">
+                <td>Latitude</td>
+                <td>{{ result.location.latitude }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.longitude is not none %}
+              <tr class="field-row">
+                <td>Longitude</td>
+                <td>{{ result.location.longitude }}</td>
+              </tr>
+            {% endif %}
             {% if result.services %}
               <tr class="field-row">
                 <td>Services</td>

@@ -109,6 +109,7 @@ def lookup_host_view_handler(all_outputs: list[GetHostActionOutput]) -> dict:
                 "services": render_services(output),
                 "labels": render_labels(output),
                 "threats": render_threats(output),
+                "location": render_location(output),
             }
             for output in all_outputs
         ],
@@ -158,3 +159,16 @@ def render_threats(output: GetHostActionOutput) -> list[str]:
             threats.add(threat.name)
 
     return list(threats)
+
+
+def render_location(output: GetHostActionOutput) -> dict:
+    return {
+        "city": get_attr_path(output, "host.location.city", None),
+        "country": get_attr_path(output, "host.location.country", None),
+        "country_code": get_attr_path(output, "host.location.country_code", None),
+        "continent": get_attr_path(output, "host.location.continent", None),
+        "postal_code": get_attr_path(output, "host.location.postal_code", None),
+        "province": get_attr_path(output, "host.location.province", None),
+        "latitude": get_attr_path(output, "host.location.coordinates.latitude", None),
+        "longitude": get_attr_path(output, "host.location.coordinates.longitude", None),
+    }
