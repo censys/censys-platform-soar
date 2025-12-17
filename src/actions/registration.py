@@ -2,7 +2,7 @@ from soar_sdk.app import App
 
 from .lookup_cert import lookup_cert, lookup_cert_view_handler
 from .lookup_host import lookup_host, lookup_host_view_handler
-from .lookup_web_property import lookup_web_property
+from .lookup_web_property import lookup_web_property, lookup_web_property_view_handler
 from .search import search
 
 
@@ -21,7 +21,8 @@ def register_all_actions(app: App) -> None:
     )
     app.register_action(
         lookup_web_property,
-        render_as="json",
+        view_handler=lookup_web_property_view_handler,
+        view_template="lookup_web_property.html",
         verbose="Retrieve a web property by domain_name:port from the Censys Platform API",
     )
     app.register_action(

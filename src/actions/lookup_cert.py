@@ -9,8 +9,9 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Params
 
 from ..config import Asset
-from ..utils import create_censys_sdk, get_attr_path
+from ..utils import create_censys_sdk
 from .action_output import CensysActionOutput
+from .utils import extract_cert_fields, get_cert_display_name
 
 logger = getLogger()
 
@@ -79,29 +80,6 @@ def lookup_cert(
     )
 
 
-def get_cert_display_name(cert: models.Certificate) -> str | None:
-    """
-    Attempts to produce a human-readable name for a certificate in the same way as the Censys Platform.
-    """
-    try:
-        common_names = cert.parsed.subject.common_name
-    except AttributeError:
-        common_names = None
-
-    if common_names and len(common_names) > 0 and common_names[0]:
-        return common_names[0]
-
-    try:
-        subject_dn = cert.parsed.subject_dn
-    except AttributeError:
-        subject_dn = None
-
-    if subject_dn is not None:
-        return subject_dn
-
-    return cert.fingerprint_sha256
-
-
 def get_cert_validity_message(cert: models.Certificate) -> str:
     now = datetime.now(UTC)
     try:
@@ -147,38 +125,6 @@ def get_cert_self_signed_message(cert: models.Certificate) -> str:
 
 def lookup_cert_view_handler(all_outputs: list[GetCertActionOutput]) -> dict:
     return {
-        "results": [
-            {
-                "fingerprint_sha256": output.cert.fingerprint_sha256,
-                "display_name": output.display_name,
-                "subject_dn": get_attr_path(output, "cert.parsed.subject_dn", "N/A"),
-                "issuer_dn": get_attr_path(output, "cert.parsed.issuer_dn", "N/A"),
-                "common_names": render_common_names(output),
-                "valid_from": get_attr_path(
-                    output, "cert.parsed.validity_period.not_before", "N/A"
-                ),
-                "valid_to": get_attr_path(
-                    output, "cert.parsed.validity_period.not_after", "N/A"
-                ),
-                "self_signed": render_self_signed(output),
-            }
-            for output in all_outputs
-        ],
+        "results": [extract_cert_fields(output.cert) for output in all_outputs],
         "total_count": len(all_outputs),
     }
-
-
-def render_common_names(output: GetCertActionOutput) -> list[str]:
-    common_names = get_attr_path(output, "cert.parsed.subject.common_name", [])
-    if common_names and isinstance(common_names, list):
-        return common_names
-    return []
-
-
-def render_self_signed(output: GetCertActionOutput) -> str:
-    self_signed = get_attr_path(output, "cert.parsed.signature.self_signed", None)
-    if self_signed is True:
-        return "Yes"
-    elif self_signed is False:
-        return "No"
-    return "Unknown"
