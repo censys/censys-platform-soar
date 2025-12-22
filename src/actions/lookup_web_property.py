@@ -7,8 +7,14 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from ..config import Asset
-from ..utils import create_censys_sdk, is_valid_at_time, is_valid_web_property_hostname
+from ..utils import (
+    create_censys_sdk,
+    get_attr_path,
+    is_valid_at_time,
+    is_valid_web_property_hostname,
+)
 from .action_output import CensysActionOutput
+from .utils import format_software, extract_cert_fields
 
 
 logger = getLogger()
@@ -97,3 +103,51 @@ def lookup_web_property(
     )
 
     return GetWebPropertyActionOutput(web=data)
+
+
+def lookup_web_property_view_handler(
+    all_outputs: list[GetWebPropertyActionOutput],
+) -> dict:
+    return {
+        "results": [
+            {
+                "hostname": output.web.hostname,
+                "port": output.web.port,
+                "scan_time": get_attr_path(output, "web.scan_time", "N/A"),
+                "software": render_software(output),
+                "endpoints": render_endpoints(output),
+                "cert": extract_cert_fields(get_attr_path(output, "web.cert", None)),
+            }
+            for output in all_outputs
+        ],
+        "total_count": len(all_outputs),
+    }
+
+
+def render_software(output: GetWebPropertyActionOutput) -> list[str]:
+    software_set: set[str] = set()
+
+    for software in get_attr_path(output, "web.software", None):
+        formatted = format_software(
+            getattr(software, "vendor", None),
+            getattr(software, "product", None),
+            getattr(software, "version", None),
+        )
+        if formatted:
+            software_set.add(formatted)
+
+    return sorted(list(software_set))
+
+
+def render_endpoints(output: GetWebPropertyActionOutput) -> list[dict]:
+    endpoints = get_attr_path(output, "web.endpoints", [])
+    if not endpoints:
+        return []
+
+    return [
+        {
+            "path": getattr(ep, "path", None),
+            "endpoint_type": getattr(ep, "endpoint_type", None),
+        }
+        for ep in endpoints
+    ]

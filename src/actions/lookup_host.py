@@ -6,7 +6,7 @@ from soar_sdk.logging import getLogger
 from soar_sdk.params import Param, Params
 
 from ..config import Asset
-from ..utils import create_censys_sdk, is_valid_at_time, is_valid_ip
+from ..utils import create_censys_sdk, get_attr_path, is_valid_at_time, is_valid_ip
 from .action_output import CensysActionOutput
 
 logger = getLogger()
@@ -94,3 +94,81 @@ def lookup_host(
 
 def get_last_scanned_at(host: models.Host) -> str:
     return max(s.scan_time for s in host.services)
+
+
+def lookup_host_view_handler(all_outputs: list[GetHostActionOutput]) -> dict:
+    return {
+        "results": [
+            {
+                "ip": output.host.ip,
+                "scan_time": output.scan_time,
+                "reverse_dns": get_attr_path(output, "host.dns.reverse_dns.names", []),
+                "whois_name": get_attr_path(output, "host.whois.network.name", "N/A"),
+                "whois_cidr": get_attr_path(output, "host.whois.network.cidrs", []),
+                "asn": render_asn(output),
+                "services": render_services(output),
+                "labels": render_labels(output),
+                "threats": render_threats(output),
+                "location": render_location(output),
+            }
+            for output in all_outputs
+        ],
+        "total_count": len(all_outputs),
+    }
+
+
+def render_asn(output: GetHostActionOutput) -> str:
+    name = get_attr_path(output, "host.autonomous_system.name")
+    asn = get_attr_path(output, "host.autonomous_system.asn")
+
+    if not name or not asn:
+        return "N/A"
+
+    return f"{name} ({asn})"
+
+
+def render_services(output: GetHostActionOutput) -> list[dict]:
+    return [
+        {
+            "port": svc.port,
+            "protocol": svc.protocol,
+            "transport_protocol": svc.transport_protocol.value.upper(),
+        }
+        for svc in get_attr_path(output, "host.services", [])
+    ]
+
+
+def render_labels(output: GetHostActionOutput) -> list[str]:
+    labels = set[str]()
+
+    for label in get_attr_path(output, "host.labels", []):
+        labels.add(label.value)
+
+    for svc in get_attr_path(output, "host.services", []):
+        for label in getattr(svc, "labels", []):
+            labels.add(label.value)
+
+    return list(labels)
+
+
+def render_threats(output: GetHostActionOutput) -> list[str]:
+    threats = set[str]()
+
+    for svc in get_attr_path(output, "host.services", []):
+        for threat in getattr(svc, "threats", []):
+            threats.add(threat.name)
+
+    return list(threats)
+
+
+def render_location(output: GetHostActionOutput) -> dict:
+    return {
+        "city": get_attr_path(output, "host.location.city", None),
+        "country": get_attr_path(output, "host.location.country", None),
+        "country_code": get_attr_path(output, "host.location.country_code", None),
+        "continent": get_attr_path(output, "host.location.continent", None),
+        "postal_code": get_attr_path(output, "host.location.postal_code", None),
+        "province": get_attr_path(output, "host.location.province", None),
+        "latitude": get_attr_path(output, "host.location.coordinates.latitude", None),
+        "longitude": get_attr_path(output, "host.location.coordinates.longitude", None),
+    }

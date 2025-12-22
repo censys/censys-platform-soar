@@ -1,0 +1,119 @@
+{% extends 'base/logo_header.html' %}
+{% block title %}Host Lookup Results{% endblock %}
+{% block widget_content %}
+  {% include 'partials/common_styles.html' %}
+  <div class="result-wrapper">
+    {% for result in results %}
+      <div class="result-section">
+        <table class="result-table">
+          <tbody>
+            <tr class="field-row">
+              <td>IP</td>
+              <td>{{ result.ip }}</td>
+            </tr>
+            <tr class="field-row">
+              <td>Scan Time</td>
+              <td>{{ result.scan_time }}</td>
+            </tr>
+            {% if result.reverse_dns %}
+              <tr class="field-row">
+                <td>Reverse DNS</td>
+                <td>{{ result.reverse_dns|join(", ") }}</td>
+              </tr>
+            {% endif %}
+            {% if result.whois_name %}
+              <tr class="field-row">
+                <td>WHOIS Name</td>
+                <td>{{ result.whois_name }}</td>
+              </tr>
+            {% endif %}
+            {% if result.whois_cidr %}
+              <tr class="field-row">
+                <td>WHOIS CIDR</td>
+                <td>{{ result.whois_cidr|join(", ") }}</td>
+              </tr>
+            {% endif %}
+            {% if result.asn %}
+              <tr class="field-row">
+                <td>ASN</td>
+                <td>{{ result.asn }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.city %}
+              <tr class="field-row">
+                <td>City</td>
+                <td>{{ result.location.city }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.province %}
+              <tr class="field-row">
+                <td>Province</td>
+                <td>{{ result.location.province }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.postal_code %}
+              <tr class="field-row">
+                <td>Postal Code</td>
+                <td>{{ result.location.postal_code }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.country %}
+              <tr class="field-row">
+                <td>Country</td>
+                <td>{{ result.location.country }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.country_code %}
+              <tr class="field-row">
+                <td>Country Code</td>
+                <td>{{ result.location.country_code }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.continent %}
+              <tr class="field-row">
+                <td>Continent</td>
+                <td>{{ result.location.continent }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.latitude is not none %}
+              <tr class="field-row">
+                <td>Latitude</td>
+                <td>{{ result.location.latitude }}</td>
+              </tr>
+            {% endif %}
+            {% if result.location.longitude is not none %}
+              <tr class="field-row">
+                <td>Longitude</td>
+                <td>{{ result.location.longitude }}</td>
+              </tr>
+            {% endif %}
+            {% if result.services %}
+              <tr class="field-row">
+                <td>Services</td>
+                <td>
+                  <ul class="result-list">
+                    {% for service in result.services %}
+                      <li>{{ service.port }}/{{ service.protocol }} ({{ service.transport_protocol }})</li>
+                    {% endfor %}
+                  </ul>
+                </td>
+              </tr>
+            {% endif %}
+            {% if result.labels %}
+              <tr class="field-row">
+                <td>Labels</td>
+                <td>{{ result.labels|join(", ") }}</td>
+              </tr>
+            {% endif %}
+            {% if result.threats %}
+              <tr class="field-row">
+                <td>Threats</td>
+                <td>{{ result.threats|join(", ") }}</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
