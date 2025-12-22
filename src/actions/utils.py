@@ -1,3 +1,4 @@
+from string import capwords
 from censys_platform import models
 
 from ..utils import get_attr_path
@@ -19,7 +20,7 @@ def format_software(
         and product_str.lower().startswith(vendor_str.lower())
     )
 
-    parts = []
+    parts: list[str] = []
     if not product_starts_with_vendor and vendor_str:
         parts.append(vendor_str)
     if product_str:
@@ -27,12 +28,7 @@ def format_software(
     if version_str:
         parts.append(version_str)
 
-    software_name = " ".join(parts)
-
-    formatted = software_name.replace("_", " ")
-    formatted = " ".join(word.capitalize() for word in formatted.split())
-
-    return formatted
+    return " ".join(capwords(p.replace("_", " ")) for p in parts)
 
 
 def extract_cert_fields(cert: models.Certificate) -> dict:
