@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PACKAGE_NAME=censys-platform-soar
+PACKAGE_NAME=censys
 
 if ! soarapps package build --output-file $PACKAGE_NAME.tgz; then
     echo "Failed to build package"

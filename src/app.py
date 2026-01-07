@@ -12,12 +12,12 @@ from .utils import create_censys_sdk, has_org_config
 logger = getLogger()
 
 app = App(
-    name="censys-platform-soar",
+    name="Censys",
     app_type="investigative",
-    logo="logo_censys.svg",
-    logo_dark="logo_censys_dark.svg",
+    logo="logo_censys.png",
+    logo_dark="logo_censys.png",
     product_vendor="Censys",
-    product_name="Censys Platform API",
+    product_name="Censys Platform",
     publisher="Censys",
     appid="15d8b3a4-9910-4ac8-bd64-933168fc03ca",
     fips_compliant=False,
