@@ -1,8 +1,8 @@
 [project]
-name = "censys-platform-soar"
-version = "0.0.1"
-description = "This app implements investigative actions to get information from the Censys Platform"
-license = "Copyright (c) 2025 Censys Inc."
+name = "Censys"
+version = "1.0.0"
+description = "This app implements investigative actions to get information from the public Censys Platform API"
+license = "Copyright (c) 2026 Censys Inc."
 requires-python = ">=3.13, <3.15"
 authors = [
 ]

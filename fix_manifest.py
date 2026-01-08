@@ -2,8 +2,8 @@ from pathlib import Path
 import re
 
 
-extracted_manifest_path = Path("censys-platform-soar") / "manifest.json"
-replacement_manifest_path = Path("censys-platform-soar") / "replacement_manifest.json"
+extracted_manifest_path = Path("censys") / "manifest.json"
+replacement_manifest_path = Path("censys") / "replacement_manifest.json"
 
 pattern = r"""manylinux[a-zA-Z0-9\-_]+_(aarch64)"""
 replacement = "x86_64"
