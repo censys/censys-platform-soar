@@ -14,8 +14,8 @@ logger = getLogger()
 
 class GetHostActionParams(Params):
     ip: str = Param(description="IPv4/IPv6 address for the host to lookup")
-    at_time: str | None = Param(
-        default=None,
+    at_time: str = Param(
+        default="",
         required=False,
         description="The historical timestamp to retrieve host data for. If unspecified, we will retrieve the latest data.",
     )
@@ -47,7 +47,7 @@ def lookup_host(
             dict(params),
         )
 
-    if params.at_time is not None and not is_valid_at_time(params.at_time):
+    if params.at_time and not is_valid_at_time(params.at_time):
         return ActionResult(
             False,
             "Please provide a valid ISO 8601 timestamp in the 'at_time' action parameter, or leave it unset",
@@ -55,7 +55,7 @@ def lookup_host(
         )
 
     logger.info(
-        f"Loading host with IP {params.ip} (at_time: {params.at_time if params.at_time is not None else 'unspecified'})"
+        f"Loading host with IP {params.ip} (at_time: {params.at_time if params.at_time else 'unspecified'})"
     )
     data: models.Host | None = None
 
