@@ -14,7 +14,7 @@ logger = getLogger()
 
 class GetHostActionParams(Params):
     ip: str = Param(description="IPv4/IPv6 address for the host to lookup")
-    at_time: str = Param(
+    at_time: str | None = Param(
         default=None,
         required=False,
         description="The historical timestamp to retrieve host data for. If unspecified, we will retrieve the latest data.",
@@ -23,6 +23,7 @@ class GetHostActionParams(Params):
 
 class GetHostActionOutput(CensysActionOutput):
     host: models.Host
+    is_truncated_host: bool
     scan_time: str
 
 
@@ -77,19 +78,29 @@ def lookup_host(
 
     latest_scan = get_last_scanned_at(data)
 
+    is_truncated_host = any(s.representative_info is not None for s in data.services)
+
     soar.set_summary(
         GetHostActionSummary(
             ip=data.ip,
-            ports=[s.port for s in data.services],
+            ports=list(set(getattr(s, "port", None) or 0 for s in data.services)),
             scan_time=latest_scan,
-            service_count=data.service_count,
+            service_count=getattr(data, "service_count", None) or len(data.services),
         )
     )
-    soar.set_message(
-        f"Host '{data.ip}' has {data.service_count:,} visible service(s), last scanned at {latest_scan}"
-    )
 
-    return GetHostActionOutput(scan_time=latest_scan, host=data)
+    if is_truncated_host:
+        soar.set_message(
+            f"Host '{data.ip}' has many visible services and has been truncated due to its size, last scanned at {latest_scan}"
+        )
+    else:
+        soar.set_message(
+            f"Host '{data.ip}' has {data.service_count:,} visible service(s), last scanned at {latest_scan}"
+        )
+
+    return GetHostActionOutput(
+        scan_time=latest_scan, is_truncated_host=is_truncated_host, host=data
+    )
 
 
 def get_last_scanned_at(host: models.Host) -> str:
@@ -102,6 +113,7 @@ def lookup_host_view_handler(all_outputs: list[GetHostActionOutput]) -> dict:
             {
                 "ip": output.host.ip,
                 "scan_time": output.scan_time,
+                "is_truncated": getattr(output, "is_truncated_host", False),
                 "reverse_dns": get_attr_path(output, "host.dns.reverse_dns.names", []),
                 "whois_name": get_attr_path(output, "host.whois.network.name", "N/A"),
                 "whois_cidr": get_attr_path(output, "host.whois.network.cidrs", []),
