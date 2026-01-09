@@ -38,7 +38,7 @@ Parameters to the actions are passed via a JSON params file. You can create a `t
 To run a particular action via the CLI, invoke the add-on via Python directly:
 
 ```bash
-python -m src.app action get_host -p test_param_host_.json -a test_asset.json
+python -m src.app action lookup_host -p test_param_host_.json -a test_asset.json
 ```
 
 ### Actions
@@ -47,9 +47,9 @@ These are the available base commands. To run one successfully, you will still n
 
 | Action | CLI Command | Description | Docs |
 |----|----|----|----|
-| `get_host` | `python -m src.app action get_host` | Retrieves a host by IP lookup | [Host Definitions](https://platform.censys.io/home/definitions?resource=host) |
-| `get_cert` | `python -m src.app action get_cert` | Retrieves a certificate by SHA256 lookup | [Cert Definitions](https://platform.censys.io/home/definitions?resource=cert) |
-| `get_web_property` | `python -m src.app action get_web_property` | Retrieves a web property by `hostname:port` lookup | [Web Property Definitions](https://platform.censys.io/home/definitions?resource=cert) |
+| `lookup_host` | `python -m src.app action lookup_host` | Retrieves a host by IP lookup | [Host Definitions](https://platform.censys.io/home/definitions?resource=host) |
+| `lookup_cert` | `python -m src.app action lookup_cert` | Retrieves a certificate by SHA256 lookup | [Cert Definitions](https://platform.censys.io/home/definitions?resource=cert) |
+| `lookup_web_property` | `python -m src.app action lookup_web_property` | Retrieves a web property by `hostname:port` lookup | [Web Property Definitions](https://platform.censys.io/home/definitions?resource=cert) |
 | `search` | `python -m src.app action search` | Performs a search across all Censys assets using the given query | [Search Result Docs](https://docs.censys.com/reference/v3-globaldata-search-query) |
 | `test_connectivity` | `python -m src.app action test_connectivity` | Tests whether the asset file is sufficient to connect to the API | _N/A_ |
 
